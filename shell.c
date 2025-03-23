@@ -10,6 +10,17 @@ void lsh_loop(void);
 char *lsh_read_line(void);
 char **lsh_split_line(char *line);
 int lsh_execute(char **args);
+int lsh_launch(char **args);
+int lsh_cd(char **args);
+int lsh_help(char **args);
+int lsh_exit(char **args);
+
+char *builtin_str[] = {"cd", "help", "exit"};
+int (*builtin_func[]) (char **) = {&lsh_cd, &lsh_help, &lsh_exit};
+
+int lsh_num_builtins() {
+  return sizeof(builtin_str) / sizeof(char *);
+}
 
 int main(int argc, char **argv) {
   lsh_loop();
@@ -115,6 +126,31 @@ int lsh_launch(char **args) {
   }
 
   return 1;
+}
+
+int lsh_cd(char **args) {
+  if (args[1] == NULL) {
+    fprintf(stderr, "lsh: expected argument to \"cd\"\n");
+  } else {
+    if (chdir(args[1]) != 0) {
+      perror("lsh");
+    }
+  }
+  return 1;
+}
+
+int lsh_help(char **args) {
+  printf("LSH Shell\n");
+  printf("Type program names and arguments, then hit enter.\n");
+  printf("Built-in commands:\n");
+  for (int i = 0; i < lsh_num_builtins(); i++) {
+    printf(" %s\n", builtin_str[i]);
+  }
+  return 1;
+}
+
+int lsh_exit(char **args) {
+  return 0;
 }
 
 int lsh_execute(char **args) {
