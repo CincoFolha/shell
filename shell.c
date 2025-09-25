@@ -26,7 +26,12 @@ int lsh_num_builtins() {
 }
 
 int main(int argc, char **argv) {
+  printf("LSH Shell v1.0 - Simple Shell Implementation\n");
+  printf("Type 'help' for available commands.\n\n");
+
   lsh_loop();
+
+  printf("\nGoodbye!\n");
   return EXIT_SUCCESS;
 }
 
