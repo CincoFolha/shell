@@ -36,8 +36,8 @@ int main(int argc, char **argv) {
 }
 
 void lsh_loop(void) {
-  char *line;
-  char **args;
+  char *line = NULL;
+  char **args = NULL;
   int status;
 
   do {
