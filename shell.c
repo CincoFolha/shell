@@ -8,6 +8,12 @@
 #define LSH_RL_BUFSIZE 1024
 #define LSH_TOK_BUFSIZE 64
 #define LSH_TOK_DELIM " \t\r\n\a"
+#define LSH_PROMPT "> "
+
+#define LSH_SUCCESS 1
+#define LSH_EXIT 0
+#define LSH_ERROR -1
+
 
 void lsh_loop(void);
 char *lsh_read_line(void);
