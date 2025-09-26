@@ -139,7 +139,7 @@ int lsh_launch(char **args) {
     } while (!WIFEXITED(status) && !WIFSIGNALED(status));
   }
 
-  return 1;
+  return LSH_SUCCESS;
 }
 
 int lsh_cd(char **args) {
@@ -150,7 +150,7 @@ int lsh_cd(char **args) {
       perror("lsh");
     }
   }
-  return 1;
+  return LSH_SUCCESS;
 }
 
 int lsh_help(char **args) {
@@ -160,16 +160,16 @@ int lsh_help(char **args) {
   for (int i = 0; i < lsh_num_builtins(); i++) {
     printf(" %s\n", builtin_str[i]);
   }
-  return 1;
+  return LSH_SUCCESS;
 }
 
 int lsh_exit(char **args) {
-  return 0;
+  return LSH_EXIT;
 }
 
 int lsh_execute(char **args) {
   if (args[0] == NULL) {
-    return 1;
+    return LSH_SUCCESS;
   }
   for (int i = 0; i < lsh_num_builtins(); i++) {
     if (strcmp(args[0], builtin_str[i]) == 0) {
