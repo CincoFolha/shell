@@ -92,8 +92,8 @@ char *lsh_read_line(void) {
 }
 
 char **lsh_split_line(char *line) {
-  int bufsize = LSH_TOK_BUFSIZE;
-  int position = 0;
+  size_t bufsize = LSH_TOK_BUFSIZE;
+  size_t position = 0;
   char **tokens = malloc(bufsize * sizeof(char *));
   char *token = NULL;
 
