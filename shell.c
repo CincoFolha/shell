@@ -47,7 +47,7 @@ void lsh_loop(void) {
   int status;
 
   do {
-    printf("> ");
+    printf(LSH_PROMPT);
     line = lsh_read_line();
     args = lsh_split_line(line);
     status = lsh_execute(args);
@@ -58,12 +58,12 @@ void lsh_loop(void) {
 }
 
 char *lsh_read_line(void) {
-  int bufsize = LSH_RL_BUFSIZE;
-  int position = 0;
+  size_t bufsize = LSH_RL_BUFSIZE;
+  size_t position = 0;
   char *buffer = malloc(sizeof(char) * bufsize);
   int c;
 
-  if (!buffer) {
+  if (buffer == NULL) {
     fprintf(stderr, "lsh: allocation error\n");
     exit(EXIT_FAILURE);
   }
@@ -74,18 +74,19 @@ char *lsh_read_line(void) {
     if (c == EOF || c == '\n') {
       buffer[position] = '\0';
       return buffer;
-    } else {
-      buffer[position] = c;
     }
-    position++;
+
+    buffer[position++] = (char)c;
 
     if (position >= bufsize) {
       bufsize += LSH_RL_BUFSIZE;
-      buffer = realloc(buffer, bufsize);
-      if (!buffer) {
+      char *new_buffer = realloc(buffer, bufsize);
+      if (new_buffer == NULL) {
+        free(buffer);
         fprintf(stderr, "lsh: allocation error\n");
         exit(EXIT_FAILURE);
       }
+      buffer = new_buffer;
     }
   }
 }
@@ -93,30 +94,32 @@ char *lsh_read_line(void) {
 char **lsh_split_line(char *line) {
   int bufsize = LSH_TOK_BUFSIZE;
   int position = 0;
-  char **tokens = malloc(bufsize * sizeof(char*));
-  char *token;
+  char **tokens = malloc(bufsize * sizeof(char *));
+  char *token = NULL;
 
-  if (!tokens) {
+  if (tokens == NULL) {
     fprintf(stderr, "lsh: allocation error\n");
     exit(EXIT_FAILURE);
   }
 
   token = strtok(line, LSH_TOK_DELIM);
   while (token != NULL) {
-    tokens[position] = token;
-    position++;
+    tokens[position++] = token;
 
     if (position >= bufsize) {
       bufsize += LSH_TOK_BUFSIZE;
-      tokens = realloc(tokens, bufsize * sizeof(char*));
-      if (!tokens) {
+      char **new_tokens = realloc(tokens, bufsize * sizeof(char *));
+      if (new_tokens == NULL) {
+        free(tokens);
         fprintf(stderr, "lsh: allocation error\n");
         exit(EXIT_FAILURE);
       }
+      tokens = new_tokens;
     }
 
     token = strtok(NULL, LSH_TOK_DELIM);
   }
+
   tokens[position] = NULL;
   return tokens;
 }
