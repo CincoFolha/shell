@@ -26,12 +26,12 @@ int lsh_cd(char **args);
 int lsh_help(char **args);
 int lsh_exit(char **args);
 
+// Utilitários
+void *lsh_safe_malloc(size_t size);
+int lsh_num_builtins(void);
+
 char *builtin_str[] = {"cd", "help", "exit"};
 int (*builtin_func[]) (char **) = {&lsh_cd, &lsh_help, &lsh_exit};
-
-int lsh_num_builtins() {
-  return sizeof(builtin_str) / sizeof(char *);
-}
 
 int main(int argc, char **argv) {
   printf("LSH Shell v1.0 - Simple Shell Implementation\n");
@@ -72,7 +72,7 @@ void lsh_loop(void) {
 char *lsh_read_line(void) {
   size_t bufsize = LSH_RL_BUFSIZE;
   size_t position = 0;
-  char *buffer = malloc(sizeof(char) * bufsize);
+  char *buffer = lsh_safe_malloc(sizeof(char) * bufsize);
   int c;
 
   if (buffer == NULL) {
@@ -203,4 +203,17 @@ int lsh_execute(char **args) {
   }
 
   return lsh_launch(args);
+}
+
+void *lsh_safe_malloc(size_t size) {
+  void *ptr = malloc(size);
+  if (ptr == NULL) {
+    printf(stderr, "allocation error");
+    exit(EXIT_FAILURE);
+  }
+  return ptr;
+}
+
+int lsh_num_builtins(void) {
+  return sizeof(builtin_str) / sizeof(char *);
 }
