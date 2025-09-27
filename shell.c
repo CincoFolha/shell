@@ -46,17 +46,27 @@ int main(int argc, char **argv) {
 void lsh_loop(void) {
   char *line = NULL;
   char **args = NULL;
-  int status;
+  int status = LSH_SUCCESS;
 
   do {
     printf(LSH_PROMPT);
+    
     line = lsh_read_line();
+    if (line == NULL) {
+      printf("\n");
+      break;
+    }
+
     args = lsh_split_line(line);
-    status = lsh_execute(args);
+    if (args != NULL && args[0] != NULL) {
+      status = lsh_execute(args);
+    }
 
     free(line);
     free(args);
-  } while (status);
+    line = NULL;
+    args = NULL;
+  } while (status == LSH_SUCCESS);
 }
 
 char *lsh_read_line(void) {
