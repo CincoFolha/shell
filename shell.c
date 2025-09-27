@@ -82,13 +82,23 @@ char *lsh_read_line(void) {
 
   while (1) {
     c = getchar();
-
-    if (c == EOF || c == '\n') {
+    
+    if (c == EOF) {
+      if (position == 0) {
+        free(buffer);
+        return NULL;
+      }
       buffer[position] = '\0';
       return buffer;
     }
 
-    buffer[position++] = (char)c;
+    if (c == '\n') {
+      buffer[position] = '\0';
+      return buffer;
+    }
+
+    buffer[position] = c;
+    position++;
 
     if (position >= bufsize) {
       bufsize += LSH_RL_BUFSIZE;
