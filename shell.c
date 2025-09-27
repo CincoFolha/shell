@@ -14,12 +14,14 @@
 #define LSH_EXIT 0
 #define LSH_ERROR -1
 
-
+// Protótipos das funções principais
 void lsh_loop(void);
 char *lsh_read_line(void);
 char **lsh_split_line(char *line);
 int lsh_execute(char **args);
 int lsh_launch(char **args);
+
+// Protótipos dos comandos built-in
 int lsh_cd(char **args);
 int lsh_help(char **args);
 int lsh_exit(char **args);
