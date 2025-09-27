@@ -179,12 +179,18 @@ int lsh_cd(char **args) {
 }
 
 int lsh_help(char **args) {
-  printf("LSH Shell\n");
-  printf("Type program names and arguments, then hit enter.\n");
+  printf("LSH Shell - Available Commands:\n");
+  printf("================================\n\n");
+  
   printf("Built-in commands:\n");
   for (int i = 0; i < lsh_num_builtins(); i++) {
     printf(" %s\n", builtin_str[i]);
   }
+
+  printf("\nYou can also run any external program by typing its name.\n");
+  printf("Use Ctrl+C to interrupt a running program.\n");
+  printf("Use Ctrl+D or 'exit' to quit the shell.\n\n");
+
   return LSH_SUCCESS;
 }
 
