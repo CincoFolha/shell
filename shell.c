@@ -176,7 +176,7 @@ int lsh_help(char **args) {
   
   printf("Built-in commands:\n");
   for (int i = 0; i < lsh_num_builtins(); i++) {
-    printf(" %s\n", builtin_str[i]);
+    printf(" %s\n", builtin_functions[i].name);
   }
 
   printf("\nYou can also run any external program by typing its name.\n");
@@ -194,9 +194,10 @@ int lsh_execute(char **args) {
   if (args[0] == NULL) {
     return LSH_SUCCESS;
   }
+
   for (int i = 0; i < lsh_num_builtins(); i++) {
-    if (strcmp(args[0], builtin_str[i]) == 0) {
-      return (*builtin_func[i])(args);
+    if (strcmp(args[0], builtin_functions[i].name) == 0) {
+      return builtin_functions[i].function(args);
     }
   }
 
@@ -223,5 +224,5 @@ void *lsh_safe_realloc(void *ptr, size_t size) {
 }
 
 int lsh_num_builtins(void) {
-  return sizeof(builtin_str) / sizeof(char *);
+  return sizeof(builtin_str) / sizeof(lsh_command);
 }
