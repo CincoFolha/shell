@@ -28,6 +28,7 @@ int lsh_exit(char **args);
 
 // Utilitários
 void *lsh_safe_malloc(size_t size);
+void *lsh_safe_realloc(void *ptr, size_t size);
 int lsh_num_builtins(void);
 
 char *builtin_str[] = {"cd", "help", "exit"};
@@ -102,12 +103,7 @@ char *lsh_read_line(void) {
 
     if (position >= bufsize) {
       bufsize += LSH_RL_BUFSIZE;
-      char *new_buffer = realloc(buffer, bufsize);
-      if (new_buffer == NULL) {
-        free(buffer);
-        fprintf(stderr, "lsh: allocation error\n");
-        exit(EXIT_FAILURE);
-      }
+      char *new_buffer = lsh_safe_realloc(buffer, bufsize);
       buffer = new_buffer;
     }
   }
@@ -218,6 +214,16 @@ void *lsh_safe_malloc(size_t size) {
     exit(EXIT_FAILURE);
   }
   return ptr;
+}
+
+void *lsh_safe_realloc(void *ptr, size_t size) {
+  void *new_ptr = realloc(ptr, size);
+  if (new_ptr == NULL) {
+    free(ptr);
+    printf(stderr, "allocation error");
+    exit(EXIT_FAILURE);
+  }
+  return new_ptr;
 }
 
 int lsh_num_builtins(void) {
