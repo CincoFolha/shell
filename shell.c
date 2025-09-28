@@ -210,7 +210,7 @@ int lsh_execute(char **args) {
 void *lsh_safe_malloc(size_t size) {
   void *ptr = malloc(size);
   if (ptr == NULL) {
-    printf(stderr, "allocation error");
+    fprintf(stderr, "allocation error");
     exit(EXIT_FAILURE);
   }
   return ptr;
@@ -220,7 +220,7 @@ void *lsh_safe_realloc(void *ptr, size_t size) {
   void *new_ptr = realloc(ptr, size);
   if (new_ptr == NULL) {
     free(ptr);
-    printf(stderr, "allocation error");
+    fprintf(stderr, "allocation error");
     exit(EXIT_FAILURE);
   }
   return new_ptr;
