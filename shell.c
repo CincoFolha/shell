@@ -76,11 +76,6 @@ char *lsh_read_line(void) {
   char *buffer = lsh_safe_malloc(sizeof(char) * bufsize);
   int c;
 
-  if (buffer == NULL) {
-    fprintf(stderr, "lsh: allocation error\n");
-    exit(EXIT_FAILURE);
-  }
-
   while (1) {
     c = getchar();
     
@@ -112,13 +107,8 @@ char *lsh_read_line(void) {
 char **lsh_split_line(char *line) {
   size_t bufsize = LSH_TOK_BUFSIZE;
   size_t position = 0;
-  char **tokens = malloc(bufsize * sizeof(char *));
+  char **tokens = lsh_safe_malloc(bufsize * sizeof(char *));
   char *token = NULL;
-
-  if (tokens == NULL) {
-    fprintf(stderr, "lsh: allocation error\n");
-    exit(EXIT_FAILURE);
-  }
 
   token = strtok(line, LSH_TOK_DELIM);
   while (token != NULL) {
@@ -126,12 +116,7 @@ char **lsh_split_line(char *line) {
 
     if (position >= bufsize) {
       bufsize += LSH_TOK_BUFSIZE;
-      char **new_tokens = realloc(tokens, bufsize * sizeof(char *));
-      if (new_tokens == NULL) {
-        free(tokens);
-        fprintf(stderr, "lsh: allocation error\n");
-        exit(EXIT_FAILURE);
-      }
+      char **new_tokens = lsh_safe_realloc(tokens, bufsize * sizeof(char *));
       tokens = new_tokens;
     }
 
