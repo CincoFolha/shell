@@ -221,5 +221,5 @@ void *lsh_safe_realloc(void *ptr, size_t size) {
 }
 
 int lsh_num_builtins(void) {
-  return sizeof(builtin_str) / sizeof(lsh_command);
+  return sizeof(builtin_functions) / sizeof(lsh_command);
 }
