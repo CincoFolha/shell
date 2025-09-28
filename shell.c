@@ -42,9 +42,6 @@ lsh_command builtin_functions[] = {
   {"exit", &lsh_exit}
 };
 
-char *builtin_str[] = {"cd", "help", "exit"};
-int (*builtin_func[]) (char **) = {&lsh_cd, &lsh_help, &lsh_exit};
-
 int main(int argc, char **argv) {
   printf("LSH Shell v1.0 - Simple Shell Implementation\n");
   printf("Type 'help' for available commands.\n\n");
