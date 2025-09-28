@@ -14,6 +14,11 @@
 #define LSH_EXIT 0
 #define LSH_ERROR -1
 
+typedef struct {
+  char *name;
+  int (*function)(char **);
+} lsh_command;
+
 // Protótipos das funções principais
 void lsh_loop(void);
 char *lsh_read_line(void);
@@ -30,6 +35,12 @@ int lsh_exit(char **args);
 void *lsh_safe_malloc(size_t size);
 void *lsh_safe_realloc(void *ptr, size_t size);
 int lsh_num_builtins(void);
+
+lsh_command builtin_functions[] = {
+  {"cd", &lsh_cd},
+  {"help", &lsh_help},
+  {"exit", &lsh_exit}
+};
 
 char *builtin_str[] = {"cd", "help", "exit"};
 int (*builtin_func[]) (char **) = {&lsh_cd, &lsh_help, &lsh_exit};
