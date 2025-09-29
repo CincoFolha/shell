@@ -32,6 +32,7 @@ int lsh_launch(char **args);
 int lsh_cd(char **args);
 int lsh_help(char **args);
 int lsh_exit(char **args);
+int lsh_pwd(char **args);
 
 // Utilitários
 void lsh_print_error(const char *message);
@@ -41,9 +42,10 @@ int lsh_num_builtins(void);
 
 // Array de comandos built-in
 static builtin_command_t builtin_commands[] = {
-  {"cd", &lsh_cd, "Change directory"},
-  {"help", &lsh_help, "Show this help message"},
-  {"exit", &lsh_exit, "Exit the shell"}
+  {"cd", lsh_cd, "Change directory"},
+  {"help", lsh_help, "Show this help message"},
+  {"exit", lsh_exit, "Exit the shell"},
+  {"pwd", lsh_pwd, "Print current working directory"}
 };
 
 int main(int argc, char **argv) {
