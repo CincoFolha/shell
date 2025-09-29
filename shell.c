@@ -32,10 +32,10 @@ int lsh_help(char **args);
 int lsh_exit(char **args);
 
 // Utilitários
+void lsh_print_error(const char *message);
 void *lsh_safe_malloc(size_t size);
 void *lsh_safe_realloc(void *ptr, size_t size);
 int lsh_num_builtins(void);
-void lsh_print_error(char *message);
 
 lsh_command builtin_functions[] = {
   {"cd", &lsh_cd},
@@ -202,6 +202,10 @@ int lsh_execute(char **args) {
   return lsh_launch(args);
 }
 
+void lsh_print_error(const char *message) {
+  fprintf(stderr, "lsh: %s: %s\n", message, strerror(errno));
+}
+
 void *lsh_safe_malloc(size_t size) {
   void *ptr = malloc(size);
   if (ptr == NULL) {
@@ -215,7 +219,7 @@ void *lsh_safe_realloc(void *ptr, size_t size) {
   void *new_ptr = realloc(ptr, size);
   if (new_ptr == NULL) {
     free(ptr);
-    lsh_print_error("allocation error");
+    lsh_print_error("reallocation error");
     exit(EXIT_FAILURE);
   }
   return new_ptr;
@@ -225,6 +229,3 @@ int lsh_num_builtins(void) {
   return sizeof(builtin_functions) / sizeof(lsh_command);
 }
 
-void lsh_print_error(char *message) {
-  fprintf(stderr, message);
-}
