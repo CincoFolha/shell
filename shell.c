@@ -39,6 +39,7 @@ void *lsh_safe_malloc(size_t size);
 void *lsh_safe_realloc(void *ptr, size_t size);
 int lsh_num_builtins(void);
 
+// Array de comandos built-in
 static builtin_command_t builtin_commands[] = {
   {"cd", &lsh_cd, "Change directory"},
   {"help", &lsh_help, "Show this help message"},
