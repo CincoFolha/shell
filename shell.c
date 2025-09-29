@@ -187,7 +187,7 @@ int lsh_launch(char **args) {
     lsh_print_error("fork failed");
   } else {
     do {
-      wpid = waitpid(pid, &status, WUNTRACED);
+      waitpid(pid, &status, WUNTRACED);
     } while (!WIFEXITED(status) && !WIFSIGNALED(status));
   }
 
