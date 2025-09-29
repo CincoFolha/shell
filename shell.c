@@ -215,7 +215,7 @@ void *lsh_safe_realloc(void *ptr, size_t size) {
   void *new_ptr = realloc(ptr, size);
   if (new_ptr == NULL) {
     free(ptr);
-    lsh_print_error(stderr, "allocation error");
+    lsh_print_error("allocation error");
     exit(EXIT_FAILURE);
   }
   return new_ptr;
