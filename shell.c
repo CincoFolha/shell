@@ -232,6 +232,19 @@ int lsh_help(char **args) {
   return LSH_SUCCESS;
 }
 
+int lsh_pwd(char **args) {
+  char *cwd = getcwd(NULL, 0);
+
+  if (cwd != NULL) {
+    printf("%s\n", cwd);
+    free(cwd);
+  } else {
+    lsh_print_error("pwd failed");
+  }
+
+  return LSH_SUCCESS;
+}
+
 int lsh_exit(char **args) {
   return LSH_EXIT;
 }
