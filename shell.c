@@ -195,13 +195,22 @@ int lsh_launch(char **args) {
 }
 
 int lsh_cd(char **args) {
+  const char *target_dir;
+
   if (args[1] == NULL) {
-    lsh_print_error("lsh: expected argument to \"cd\"\n");
-  } else {
-    if (chdir(args[1]) != 0) {
-      perror("lsh");
+    target_dir = getenv("HOME");
+    if (target_dir == NULL) {
+      lsh_print_error("lsh: cd: HOME environment variable not set\n");
+      return LSH_SUCCESS;
     }
+  } else {
+    target_dir = args[1];
   }
+
+  if (chdir(target_dir) != 0) {
+    lsh_print_error("cd failed");
+  }
+
   return LSH_SUCCESS;
 }
 
