@@ -34,6 +34,7 @@ int lsh_exit(char **args);
 // Utilitários
 void *lsh_safe_malloc(size_t size);
 void *lsh_safe_realloc(void *ptr, size_t size);
+void lsh_print_error(char *message);
 int lsh_num_builtins(void);
 
 lsh_command builtin_functions[] = {
@@ -158,7 +159,7 @@ int lsh_launch(char **args) {
 
 int lsh_cd(char **args) {
   if (args[1] == NULL) {
-    fprintf(stderr, "lsh: expected argument to \"cd\"\n");
+    lsh_print_error("lsh: expected argument to \"cd\"\n");
   } else {
     if (chdir(args[1]) != 0) {
       perror("lsh");
@@ -204,7 +205,7 @@ int lsh_execute(char **args) {
 void *lsh_safe_malloc(size_t size) {
   void *ptr = malloc(size);
   if (ptr == NULL) {
-    fprintf(stderr, "allocation error");
+    lsh_print_error("allocation error");
     exit(EXIT_FAILURE);
   }
   return ptr;
@@ -214,10 +215,14 @@ void *lsh_safe_realloc(void *ptr, size_t size) {
   void *new_ptr = realloc(ptr, size);
   if (new_ptr == NULL) {
     free(ptr);
-    fprintf(stderr, "allocation error");
+    lsh_print_error(stderr, "allocation error");
     exit(EXIT_FAILURE);
   }
   return new_ptr;
+}
+
+void lsh_print_error(char *message) {
+  fprintf(stderr, message);
 }
 
 int lsh_num_builtins(void) {
