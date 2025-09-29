@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #define LSH_RL_BUFSIZE 1024
 #define LSH_TOK_BUFSIZE 64
