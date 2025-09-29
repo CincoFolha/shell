@@ -120,10 +120,29 @@ char **lsh_split_line(char *line) {
   size_t position = 0;
   char **tokens = lsh_safe_malloc(bufsize * sizeof(char *));
   char *token = NULL;
+  char *line_copy = NULL;
 
-  token = strtok(line, LSH_TOK_DELIM);
+  line_copy = strdup(line);
+  if (line_copy == NULL) {
+    lsh_print_error("allocation error in line copy");
+    free(tokens);
+    return NULL;
+  }
+
+  token = strtok(line_copy, LSH_TOK_DELIM);
   while (token != NULL) {
-    tokens[position++] = token;
+    tokens[position] = strdup(token);
+    if (tokens[position] == NULL) {
+      lsh_print_error("allocation error in token copy");
+      for (int i = 0; i < position; i++) {
+        free(tokens[i]);
+      }
+      free(tokens);
+      free(line_copy);
+      return NULL;
+    }
+
+    position++;
 
     if (position >= bufsize) {
       bufsize += LSH_TOK_BUFSIZE;
@@ -135,21 +154,37 @@ char **lsh_split_line(char *line) {
   }
 
   tokens[position] = NULL;
+  free(line_copy);
   return tokens;
 }
 
+int lsh_execute(char **args) {
+  if (args == NULL || args[0] == NULL) {
+    return LSH_SUCCESS;
+  }
+
+  for (int i = 0; i < lsh_num_builtins(); i++) {
+    if (strcmp(args[0], builtin_commands[i].name) == 0) {
+      return builtin_commands[i].function(args);
+    }
+  }
+
+  return lsh_launch(args);
+}
+
 int lsh_launch(char **args) {
-  pid_t pid, wpid;
+  pid_t pid;
   int status;
 
   pid = fork();
+
   if (pid == 0) {
     if (execvp(args[0], args) == -1) {
-      perror("lsh");
+      lsh_print_error("command execution failed");
     }
     exit(EXIT_FAILURE);
   } else if (pid < 0) {
-    perror("lsh");
+    lsh_print_error("fork failed");
   } else {
     do {
       wpid = waitpid(pid, &status, WUNTRACED);
@@ -190,20 +225,6 @@ int lsh_help(char **args) {
 
 int lsh_exit(char **args) {
   return LSH_EXIT;
-}
-
-int lsh_execute(char **args) {
-  if (args[0] == NULL) {
-    return LSH_SUCCESS;
-  }
-
-  for (int i = 0; i < lsh_num_builtins(); i++) {
-    if (strcmp(args[0], builtin_commands[i].name) == 0) {
-      return builtin_commands[i].function(args);
-    }
-  }
-
-  return lsh_launch(args);
 }
 
 void lsh_print_error(const char *message) {
