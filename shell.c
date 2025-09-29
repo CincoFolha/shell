@@ -17,7 +17,8 @@
 typedef struct {
   char *name;
   int (*function)(char **);
-} lsh_command;
+  const char *description;
+} builtin_command_t;
 
 // Protótipos das funções principais
 void lsh_loop(void);
@@ -37,10 +38,10 @@ void *lsh_safe_malloc(size_t size);
 void *lsh_safe_realloc(void *ptr, size_t size);
 int lsh_num_builtins(void);
 
-lsh_command builtin_functions[] = {
-  {"cd", &lsh_cd},
-  {"help", &lsh_help},
-  {"exit", &lsh_exit}
+static builtin_command_t builtin_commands[] = {
+  {"cd", &lsh_cd, "Change directory"},
+  {"help", &lsh_help, "Show this help message"},
+  {"exit", &lsh_exit, "Exit the shell"}
 };
 
 int main(int argc, char **argv) {
@@ -174,7 +175,9 @@ int lsh_help(char **args) {
   
   printf("Built-in commands:\n");
   for (int i = 0; i < lsh_num_builtins(); i++) {
-    printf(" %s\n", builtin_functions[i].name);
+    printf(" %-10s - %s\n", 
+        builtin_commands[i].name,
+        builtin_commands[i].description);
   }
 
   printf("\nYou can also run any external program by typing its name.\n");
@@ -194,8 +197,8 @@ int lsh_execute(char **args) {
   }
 
   for (int i = 0; i < lsh_num_builtins(); i++) {
-    if (strcmp(args[0], builtin_functions[i].name) == 0) {
-      return builtin_functions[i].function(args);
+    if (strcmp(args[0], builtin_commands[i].name) == 0) {
+      return builtin_commands[i].function(args);
     }
   }
 
@@ -226,6 +229,6 @@ void *lsh_safe_realloc(void *ptr, size_t size) {
 }
 
 int lsh_num_builtins(void) {
-  return sizeof(builtin_functions) / sizeof(lsh_command);
+  return sizeof(builtin_commands) / sizeof(lsh_command);
 }
 
