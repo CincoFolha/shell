@@ -2,7 +2,6 @@ TARGET = lsh
 
 CC = gcc
 CFLAGS = -Wall -Wextra -pedantic -g
-
 SRC = shell.c
 
 all: $(TARGET)
