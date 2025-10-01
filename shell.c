@@ -137,7 +137,7 @@ char **lsh_split_line(char *line) {
     tokens[position] = strdup(token);
     if (tokens[position] == NULL) {
       lsh_print_error("allocation error in token copy");
-      for (int i = 0; i < position; i++) {
+      for (size_t i = 0; i < position; i++) {
         free(tokens[i]);
       }
       free(tokens);
