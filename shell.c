@@ -166,7 +166,7 @@ int lsh_execute(char **args) {
     return LSH_SUCCESS;
   }
 
-  for (int i = 0; i < lsh_num_builtins(); i++) {
+  for (size_t i = 0; i < lsh_num_builtins(); i++) {
     if (strcmp(args[0], builtin_commands[i].name) == 0) {
       return builtin_commands[i].function(args);
     }
@@ -222,7 +222,7 @@ int lsh_help(char **args) {
   printf("================================\n\n");
   
   printf("Built-in commands:\n");
-  for (int i = 0; i < lsh_num_builtins(); i++) {
+  for (size_t i = 0; i < lsh_num_builtins(); i++) {
     printf(" %-10s - %s\n", 
         builtin_commands[i].name,
         builtin_commands[i].description);
@@ -275,7 +275,7 @@ void *lsh_safe_realloc(void *ptr, size_t size) {
   return new_ptr;
 }
 
-int lsh_num_builtins(void) {
+size_t lsh_num_builtins(void) {
   return sizeof(builtin_commands) / sizeof(builtin_command_t);
 }
 
