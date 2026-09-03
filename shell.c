@@ -48,7 +48,7 @@ static builtin_command_t builtin_commands[] = {
   {"pwd", lsh_pwd, "Print current working directory"}
 };
 
-int main(int argc, char **argv) {
+int main(void) {
   printf("LSH Shell v1.0 - Simple Shell Implementation\n");
   printf("Type 'help' for available commands.\n\n");
 
