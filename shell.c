@@ -38,7 +38,7 @@ int lsh_pwd(char **args);
 void lsh_print_error(const char *message);
 void *lsh_safe_malloc(size_t size);
 void *lsh_safe_realloc(void *ptr, size_t size);
-int lsh_num_builtins(void);
+size_t lsh_num_builtins(void);
 
 // Array de comandos built-in
 static builtin_command_t builtin_commands[] = {
