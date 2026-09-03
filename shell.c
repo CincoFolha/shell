@@ -38,7 +38,7 @@ int lsh_pwd(char **args);
 void lsh_print_error(const char *message);
 void *lsh_safe_malloc(size_t size);
 void *lsh_safe_realloc(void *ptr, size_t size);
-int lsh_num_builtins(void);
+size_t lsh_num_builtins(void);
 
 // Array de comandos built-in
 static builtin_command_t builtin_commands[] = {
@@ -218,6 +218,8 @@ int lsh_cd(char **args) {
 }
 
 int lsh_help(char **args) {
+  (void)args;
+  
   printf("LSH Shell - Available Commands:\n");
   printf("================================\n\n");
   
@@ -236,6 +238,8 @@ int lsh_help(char **args) {
 }
 
 int lsh_pwd(char **args) {
+  (void)args;
+  
   char *cwd = getcwd(NULL, 0);
 
   if (cwd != NULL) {
@@ -249,6 +253,8 @@ int lsh_pwd(char **args) {
 }
 
 int lsh_exit(char **args) {
+  (void)args;
+  
   return LSH_EXIT;
 }
 
