@@ -22,10 +22,13 @@ RM_RF ?= rm -rf
 MKDIR_P ?= mkdir -p
 
 # Sources (auto-detect) and objects/deps (out-of-source)
-SRC := $(wildcard *.c)
+SRCDIR := src
+INCDIR := include
 OBJDIR ?= build
-OBJ := $(patsubst %.c,$(OBJDIR)/%.o,$(SRC))
-DEPS := $(OBJ:.o=.d)
+
+SOURCES := $(wildcard $(SRCDIR)/*.c)
+OBJECTS := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SOURCES))
+DEPS := $(OBJECTS:.o=.d)
 
 # Verbose toggle: `make V=1` to show commands
 ifeq ($(V),1)
@@ -38,7 +41,7 @@ endif
 
 all: $(TARGET)
 
-$(TARGET): $(OBJ)
+$(TARGET): $(OBJECTS)
 	$(Q)$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 	$(Q)if command -v $(STRIP) >/dev/null 2>&1 && [ -n "$(STRIP)" ]; then $(STRIP) $@ || true; fi
 
@@ -46,9 +49,9 @@ $(TARGET): $(OBJ)
 
 # Build object files in $(OBJDIR) from sources in the source tree.
 # The -MF ensures .d files go next to their .o files inside OBJDIR.
-$(OBJDIR)/%.o: %.c
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(Q)$(MKDIR_P) $(dir $@)
-	$(Q)$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -MF $(@:.o=.d) -c $< -o $@
+	$(Q)$(CC) $(CPPFLAGS) -I$(INCDIR) $(CFLAGS) -MMD -MP -MF $(@:.o=.d) -c $< -o $@
 
 run: all
 	$(Q)./$(TARGET)
@@ -61,7 +64,7 @@ uninstall:
 	$(Q)$(RM) $(DESTDIR)$(BINDIR)/$(TARGET)
 
 clean:
-	$(Q)$(RM) $(TARGET) $(OBJ) $(DEPS)
+	$(Q)$(RM) $(TARGET) $(OBJECTS) $(DEPS)
 
 # remove generated build directory (careful: will remove whole OBJDIR)
 distclean: clean
