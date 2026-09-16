@@ -1,0 +1,29 @@
+# Build artifacts
+build/
+*.o
+*.d
+lsh
+
+# System files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.iml
+
+# Dependencies
+*.a
+*.so
+*.dylib
+
+# Debug files
+*.dSYM/
+gdb.txt
+valgrind.log
+
+# Archives
+*.tar.gz
+*.zip
