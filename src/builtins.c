@@ -5,14 +5,23 @@
 
 #include "../include/shell.h"
 
+#define DEFAULT_HOME "/root"
+
+static const char *get_home_dir(void) {
+  const char *home = getenv("HOME");
+  return (home != NULL && home[0] != '\0') ? home : DEFAULT_HOME;
+}
+
 int lsh_cd(char **args) {
+  if (args[1] != NULL && args[2] != NULL) {
+    fprintf(stderr, "lsh: cd: too many arguments\n");
+    return LSH_SUCCESS;
+  }
+
   const char *target_dir = args[1];
   
   if (target_dir == NULL) {
-    target_dir = getenv("HOME");
-    if (target_dir == NULL) {
-      target_dir = "/root";
-    }
+    target_dir = get_home_dir();
   }
 
   if (chdir(target_dir) != 0) {
